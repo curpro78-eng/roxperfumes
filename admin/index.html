@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROX Admin — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+<link rel="stylesheet" href="./style.css">
+<script src="./script.js" defer></script>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-ornament">
+      <div class="orn-line"></div><div class="orn-diamond"></div><div class="orn-line r"></div>
+    </div>
+    <div class="login-logo">ROX</div>
+    <p class="login-year">· Admin Panel ·</p>
+    <div class="fg">
+      <label>Email Address</label>
+      <div class="input-wrap">
+        <svg class="input-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <input type="email" id="a-email" placeholder="admin@rox1974.com" autocomplete="email">
+      </div>
+    </div>
+    <div class="fg">
+      <label>Password</label>
+      <div class="input-wrap">
+        <svg class="input-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="a-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+    </div>
+    <div class="err-box" id="login-err">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Invalid credentials. Please try again.
+    </div>
+    <button class="btn-login" id="login-btn" onclick="doLogin()">Enter Dashboard</button>
+    <a class="back-link" href="index.html">← Back to Website</a>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <div class="sb-logo">ROX Perfumes</div>
+      <div class="sb-sub">Admin ·</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Overview</div>
+      <button class="sb-btn active" onclick="showPanel('analytics',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <div class="sb-section">Catalog</div>
+      <button class="sb-btn" onclick="showPanel('products',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Products
+        <span class="sb-badge badge-amber" id="sb-prod-count">0</span>
+      </button>
+      <div class="sb-section">Commerce</div>
+      <button class="sb-btn" onclick="showPanel('orders',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Orders
+        <span class="sb-badge badge-red" id="sb-order-badge" style="display:none">0</span>
+      </button>
+      <div class="sb-section">Feedback</div>
+      <button class="sb-btn" onclick="showPanel('reviews',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Reviews
+        <span class="sb-badge badge-amber" id="sb-review-count">0</span>
+      </button>
+      <div class="sb-section">Store Settings</div>
+      <button class="sb-btn" onclick="showPanel('settings',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    <div class="sb-footer">
+      <a class="sb-btn" href="../index.html" target="_blank" style="text-decoration:none; justify-content: center; background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.2);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Live Site
+      </a>
+      <div class="sb-user-row">
+        <div class="sb-avatar" id="sb-avatar">A</div>
+        <div class="sb-user">
+          <p class="sb-uname" id="sb-uname">Admin</p>
+          <p class="sb-urole">Administrator</p>
+        </div>
+        <button class="btn-logout-sb" onclick="doLogout()" title="Logout">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <header class="topbar" id="topbar">
+    <div class="tb-logo-m">ROX Perfumes</div>
+    <button class="hamburger" onclick="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+  <div class="sb-overlay" id="sb-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="main-wrap">
+    <main class="content">
+
+      <!-- ANALYTICS -->
+      <div class="panel active" id="panel-analytics">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Overview & Analytics</h2>
+            <p class="page-subtitle" id="dash-date"></p>
+          </div>
+          <button class="btn-add" onclick="exportToExcel()" style="background:var(--green);color:var(--black)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Excel
+          </button>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="chart-row">
+          <div class="chart-card">
+            <h3 class="chart-head">Top Products <span class="chart-badge">By sales</span></h3>
+            <div id="top-prods"></div>
+          </div>
+        </div>
+        <div class="recent-card">
+          <h3 class="chart-head" style="margin-bottom:0.8rem">All Products <span class="chart-badge" id="recent-count"></span></h3>
+          <div id="recentList"><div class="loading-state">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="panel" id="panel-products">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Products</h2>
+            <p class="page-subtitle">Manage your fragrance catalog</p>
+          </div>
+          <div style="display:flex;gap:.5rem;">
+            <input type="file" id="importJson" accept=".json" style="display:none" onchange="importProducts(event)">
+            <button class="btn-add" style="background:var(--white-dim);color:var(--black)" onclick="document.getElementById('importJson').click()">Import JSON</button>
+            <button class="btn-add" style="background:var(--gold);color:var(--black)" onclick="exportProducts()">Export JSON</button>
+            <button class="btn-add" onclick="openModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Product
+            </button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--white-dim)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="search-input" type="text" id="prod-search" placeholder="Search products…" oninput="renderProdsTable()">
+          </div>
+          <div class="filter-pills">
+            <button class="filter-pill active" onclick="setCatFilter('All',this)">All</button>
+            <button class="filter-pill" onclick="setCatFilter('Men',this)">Men</button>
+            <button class="filter-pill" onclick="setCatFilter('Women',this)">Women</button>
+            <button class="filter-pill" onclick="setCatFilter('Unisex',this)">Unisex</button>
+            <button class="filter-pill" onclick="setCatFilter('Classic',this)">Classic</button>
+            <button class="filter-pill" onclick="setCatFilter('Premium',this)">Premium</button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="atbl">
+            <thead><tr><th>Image</th><th>Name</th><th>Prices</th><th>Category</th><th>Stock</th><th>Sold</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="prod-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div class="panel" id="panel-orders">
+        <div class="orders-head">
+          <div>
+            <h2 class="page-title">Orders</h2>
+            <p class="page-subtitle" id="order-count">Loading…</p>
+          </div>
+          <div class="filter-orders">
+            <button class="fo-btn active" onclick="filterOrders('All',this)">All</button>
+            <button class="fo-btn" onclick="filterOrders('Pending',this)">Pending</button>
+            <button class="fo-btn" onclick="filterOrders('Completed',this)">Completed</button>
+            <button class="fo-btn" onclick="filterOrders('Cancelled',this)">Cancelled</button>
+          </div>
+        </div>
+        <div id="orders-list"></div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="panel" id="panel-reviews">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Reviews</h2>
+            <p class="page-subtitle" id="review-subtitle">Customer feedback</p>
+          </div>
+        </div>
+        <div id="reviews-admin-list"><div class="loading-state">Loading reviews…</div></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="panel" id="panel-settings">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Settings</h2>
+            <p class="page-subtitle">Manage store configuration</p>
+          </div>
+        </div>
+        <div class="recent-card">
+          <h3 class="chart-head" style="margin-bottom:0.8rem">Payment Gateway</h3>
+          <p style="font-size: 0.8rem; color: var(--white-dim); margin-bottom: 1rem;">Payments are now handled securely by Razorpay. To update your Razorpay keys, please update the frontend code directly.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div id="prod-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 class="modal-title" id="modal-title">Add Product</h3>
+    <input type="hidden" id="m-pid">
+
+    <div class="form-grid">
+      <!-- Basic fields -->
+      <div class="fg2 full"><label>Product Name *</label><input type="text" id="m-name" placeholder="e.g. Noir Royale"></div>
+      <div class="fg2"><label>Category</label><select id="m-cat"><option value="Men">Men</option><option value="Women">Women</option><option value="Unisex">Unisex</option><option value="Classic">Classic</option><option value="Premium">Premium</option></select></div>
+      <div class="fg2"><label>Single Size Override</label><select id="pSize"><option value="">Multi-size (Use Prices below)</option><option value="6ml">6ml</option><option value="12ml">12ml</option><option value="30ml">30ml</option><option value="50ml">50ml</option><option value="70ml">70ml</option><option value="100ml">100ml</option></select></div>
+      <div class="fg2"><label>Default Size</label><select id="m-def-ml"><option value="8ml">8ml</option><option value="30ml">30ml</option><option value="50ml" selected>50ml</option><option value="70ml">70ml</option><option value="100ml">100ml</option></select></div>
+      <div class="fg2"><label>Price Base (₹) (if Single Size)</label><input type="number" id="m-price-base" placeholder="2999" min="0"></div>
+      <div class="fg2"><label>Price 8ml (₹)</label><input type="number" id="m-price-6" placeholder="299" min="0"></div>
+      <div class="fg2"><label>Price 30ml (₹)</label><input type="number" id="m-price-30" placeholder="1299" min="0"></div>
+      <div class="fg2"><label>Price 50ml (₹)</label><input type="number" id="m-price-50" placeholder="1999" min="0"></div>
+      <div class="fg2"><label>Price 70ml (₹)</label><input type="number" id="m-price-70" placeholder="2499" min="0"></div>
+      <div class="fg2"><label>Price 100ml (₹)</label><input type="number" id="m-price-100" placeholder="2999" min="0"></div>
+      <div class="fg2"><label>Opening Stock</label><input type="number" id="m-open-stock" placeholder="0" min="0"></div>
+      <div class="fg2"><label>Added Stock</label><input type="number" id="m-add-stock" placeholder="0" min="0"></div>
+
+      <!-- Image section divider -->
+      <div class="img-section-divider"><span>Image — use one or both</span></div>
+
+      <!-- Option A: URL input -->
+      <div class="fg2 full">
+        <label>
+          Image URL
+          <span style="color:var(--gold-dim);font-size:0.58rem;letter-spacing:0.06em;text-transform:none;font-weight:400;margin-left:0.4rem">optional — paste a direct link</span>
+        </label>
+        <input type="text" id="m-img" placeholder="https://example.com/image.jpg" oninput="onUrlInput()">
+      </div>
+
+      <!-- Option B: File upload -->
+      <div class="fg2 full">
+        <label>
+          Upload Image
+          <span style="color:var(--gold-dim);font-size:0.58rem;letter-spacing:0.06em;text-transform:none;font-weight:400;margin-left:0.4rem">auto-compressed · saved to Firebase Storage</span>
+        </label>
+        <div class="img-upload-area" id="imgUploadArea">
+          <input type="file" id="m-file" accept="image/*" onchange="handleImg(this)">
+          <p id="upload-label-text">📸 Click or drag to upload image</p>
+          <small>Max 900px · auto-compressed · uploaded to Firebase</small>
+        </div>
+        <div class="upload-progress" id="upload-progress">
+          <div class="upload-progress-bar" id="upload-progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- Live previews for both sources -->
+      <div class="img-previews">
+        <div class="img-preview-item" id="prev-upload-wrap">
+          <img id="prev-upload" src="" alt="Uploaded">
+          <button class="clear-btn" onclick="clearUpload()" title="Remove uploaded image">✕</button>
+          <p class="img-preview-label">Uploaded file</p>
+        </div>
+        <div class="img-preview-item" id="prev-url-wrap">
+          <img id="prev-url" src="" alt="URL preview">
+          <button class="clear-btn" onclick="clearUrlPreview()" title="Clear URL">✕</button>
+          <p class="img-preview-label">URL preview</p>
+        </div>
+      </div>
+
+      <!-- Active image indicator -->
+      <div id="img-active-note" style="grid-column:1/-1;font-size:0.68rem;color:var(--white-dim);display:none;padding:0.5rem 0.8rem;background:rgba(201,168,76,0.06);border-radius:var(--radius);border-left:2px solid var(--gold)"></div>
+
+      <!-- Description & Notes -->
+      <div class="fg2 full">
+        <label>Top Notes</label>
+        <input type="text" id="m-top-notes" placeholder="Rose, Citrus">
+      </div>
+      <div class="fg2 full">
+        <label>Middle Notes</label>
+        <input type="text" id="m-mid-notes" placeholder="Jasmine, Lavender">
+      </div>
+      <div class="fg2 full">
+        <label>Base Notes</label>
+        <input type="text" id="m-base-notes" placeholder="Musk, Sandalwood">
+      </div>
+      <div class="fg2 full">
+        <label>Description</label>
+        <textarea id="pDescription" placeholder="Product description..." rows="3" style="width:100%;background:rgba(201,168,76,.03);border:1px solid rgba(201,168,76,.2);color:var(--white);padding:.8rem;border-radius:var(--radius);font-family:var(--font-s)"></textarea>
+      </div>
+    </div>
+
+    <button class="btn-save" id="save-btn" onclick="saveProd()">
+      <span id="save-label">Save Product</span>
+      <div class="spin" id="save-spin"></div>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+</body>
+</html>
