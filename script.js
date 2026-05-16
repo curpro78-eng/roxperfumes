@@ -521,7 +521,7 @@ function initRazorpay() {
   btn.disabled = true;
   
   var options = {
-      "key": "rzp_test_SoowPinKQrYUkK",
+      "key": "rzp_live_Sq1rhEXXUlmb4o",
       "amount": amountToPay,
       "currency": "INR",
       "name": "ROX Perfumes",
